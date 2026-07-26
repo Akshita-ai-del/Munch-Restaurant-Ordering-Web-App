@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  # ── Backend ──────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: munch-backend
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      # SQLite (default dev) — swap DATABASE_URL for a real DB in prod
+      DATABASE_URL: file:/app/prisma/data.db
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_refresh_secret}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_placeholder}
+      CLIENT_URL: http://localhost:3000
+    volumes:
+      # Persist the SQLite database outside the container
+      - backend-db:/app/prisma
+    networks:
+      - munch-net
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:5000/health']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://backend:5000
+    container_name: munch-frontend
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - munch-net
+
+# ── Volumes & Networks ────────────────────────────────────────────────────────
+volumes:
+  backend-db:
+
+networks:
+  munch-net:
+    driver: bridge

@@ -1,0 +1,43 @@
+{
+  "name": "munch-backend",
+  "version": "1.0.0",
+  "description": "Munch restaurant ordering app backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "db:migrate": "npx prisma migrate dev --name init",
+    "db:generate": "npx prisma generate",
+    "db:seed": "node prisma/seed.js",
+    "db:studio": "npx prisma studio",
+    "db:reset": "npx prisma migrate reset --force && node prisma/seed.js",
+    "setup": "npm run db:generate && npm run db:migrate && npm run db:seed"
+  },
+  "keywords": [
+    "restaurant",
+    "ordering",
+    "pwa",
+    "munch"
+  ],
+  "author": "Munch Team",
+  "license": "MIT",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "@prisma/adapter-libsql": "^7.9.0",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^5.22.0",
+    "socket.io": "^4.8.3",
+    "stripe": "^22.3.2"
+  }
+}
