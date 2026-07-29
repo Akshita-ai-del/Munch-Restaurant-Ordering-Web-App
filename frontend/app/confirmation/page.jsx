@@ -1,11 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { PartyPopper, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { orderApi } from '@/services/api';
 
-export default function ConfirmationPage() {
+ function ConfirmationContent() {
   const params = useSearchParams();
   const orderId = params.get('orderId');
   const [order, setOrder] = useState(null);
@@ -86,3 +86,12 @@ export default function ConfirmationPage() {
     </div>
   );
 }
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={null}>
+      <ConfirmationContent />
+    </Suspense>
+  );
+}
+
