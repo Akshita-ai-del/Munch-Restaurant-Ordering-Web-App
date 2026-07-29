@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Search, SlidersHorizontal, Grid, List } from 'lucide-react';
 import { menuApi } from '@/services/api';
 import MenuCard from '@/components/MenuCard';
@@ -7,7 +7,7 @@ import CategoryFilter from '@/components/CategoryFilter';
 import BottomNav from '@/components/BottomNav';
 import { useSearchParams } from 'next/navigation';
 
-export default function MenuPage() {
+function MenuContent() {
   const params = useSearchParams();
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -72,5 +72,12 @@ export default function MenuPage() {
       </div>
       <BottomNav />
     </>
+  );
+}
+export default function MenuPage() {
+  return (
+    <Suspense fallback={null}>
+      <MenuContent />
+    </Suspense>
   );
 }
