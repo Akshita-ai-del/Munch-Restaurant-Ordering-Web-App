@@ -60,7 +60,9 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('munch_token');
     deleteCookie('munch_token');
     dispatch({ type: 'LOGOUT' });
-    window.location.href = '/login';
+    if (typeof window !== 'underfined') {
+       window.location.href = '/login';
+    }
   };
 
   return (
