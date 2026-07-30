@@ -17,11 +17,12 @@ export default function ProfilePage() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!user) { router.push('/login'); return; }
     userApi.getAddresses().then(({ data }) => setAddresses(data.addresses)).catch(() => {});
     walletApi.get().then(({ data }) => setWallet(data.wallet)).catch(() => {});
-  }, []);
+  }, [user, router]);
 
-  if (!user) { router.push('/login'); return null; }
+  if (!user) return null;
 
   return (
     <>

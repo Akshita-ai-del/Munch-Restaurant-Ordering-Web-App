@@ -4,13 +4,18 @@ export const metadata = {
   title: 'Munch — The Yard Milkshake Bar',
   description: 'Order over-the-top milkshakes, sundaes, edible cookie dough & craft coffee from The Yard Milkshake Bar. Fast delivery, real-time tracking.',
   manifest: '/manifest.json',
-  themeColor: '#FF1F8E',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'Munch',
   },
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+};
+
+export const viewport = {
+  themeColor: '#FF1F8E',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }) {

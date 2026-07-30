@@ -25,7 +25,7 @@ api.interceptors.response.use(
     if (err.response?.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('munch_token');
-        window.location.href = '/login';
+        window.location.replace('/login');
       }
     }
     return Promise.reject(err);
