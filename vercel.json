@@ -1,4 +1,3 @@
 {
-  "framework": "nextjs",
-  "root": "frontend"
+  "framework": "nextjs"
 }
