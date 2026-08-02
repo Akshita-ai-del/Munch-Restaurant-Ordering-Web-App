@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { ArrowLeft, MessageCircle, Star } from 'lucide-react';
 import { orderApi } from '@/services/api';
 import { connectSocket } from '@/services/socket';
@@ -8,23 +8,27 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function OrderTrackingPage({ params }) {
+  // Next.js 15+: params is a Promise — unwrap with React.use()
+  const { id } = use(params);
+
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    orderApi.getById(params.id)
+    if (!id) return;
+    orderApi.getById(id)
       .then(({ data }) => { setOrder(data.order); setLoading(false); })
       .catch(() => { router.push('/orders'); });
 
     // Subscribe to live status updates
     const socket = connectSocket();
-    socket.emit('join-order', params.id);
+    socket.emit('join-order', id);
     socket.on('order-status-updated', ({ status }) => {
       setOrder((prev) => prev ? { ...prev, status } : prev);
     });
-    return () => { socket.off('order-status-updated'); socket.emit('leave-order', params.id); };
-  }, [params.id]);
+    return () => { socket.off('order-status-updated'); socket.emit('leave-order', id); };
+  }, [id]);
 
   if (loading) return <div className="page-loading"><div className="spinner" /></div>;
   if (!order) return null;

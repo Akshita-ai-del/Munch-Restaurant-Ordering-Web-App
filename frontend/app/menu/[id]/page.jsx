@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { ArrowLeft, Heart, Plus, Minus, Star, Clock, Flame } from 'lucide-react';
 import { menuApi, userApi } from '@/services/api';
 import { useCart } from '@/context/CartContext';
@@ -8,6 +8,9 @@ import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating';
 
 export default function ItemDetailPage({ params }) {
+  // Next.js 15+: params is a Promise — must be unwrapped with React.use()
+  const { id } = use(params);
+
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
@@ -20,10 +23,15 @@ export default function ItemDetailPage({ params }) {
   const router = useRouter();
 
   useEffect(() => {
-    menuApi.getById(params.id)
+    if (!id) return;
+    menuApi.getById(id)
       .then(({ data }) => { setItem(data.item); setLoading(false); })
-      .catch(() => { toast.error('Item not found'); router.push('/menu'); });
-  }, [params.id]);
+      .catch((err) => {
+        const msg = err.response?.data?.error || 'Item not found';
+        toast.error(msg);
+        router.push('/menu');
+      });
+  }, [id]);
 
   const handleAddonSelect = (addonId, optionLabel, optionPrice) => {
     setSelectedAddons((prev) => ({ ...prev, [addonId]: { label: optionLabel, price: optionPrice } }));

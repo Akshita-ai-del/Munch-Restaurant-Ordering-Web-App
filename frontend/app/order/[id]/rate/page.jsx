@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,9 @@ const EMOJIS = ['😞', '😕', '😐', '😊', '🤩'];
 const LABELS = ['Poor', 'Fair', 'Good', 'Great', 'Amazing!'];
 
 export default function RatePage({ params }) {
+  // Next.js 15+: params is a Promise — unwrap with React.use()
+  const { id } = use(params);
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -21,7 +24,7 @@ export default function RatePage({ params }) {
     if (!rating) { toast.error('Please select a rating'); return; }
     setSubmitting(true);
     try {
-      await api.post('/reviews', { orderId: params.id, rating, comment });
+      await api.post('/reviews', { orderId: id, rating, comment });
       setDone(true);
       toast.success('Thanks for your review! 🌟');
       setTimeout(() => router.push('/orders'), 2000);

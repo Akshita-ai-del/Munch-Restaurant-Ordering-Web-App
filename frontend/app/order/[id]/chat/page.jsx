@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { ArrowLeft, Send } from 'lucide-react';
 import { chatApi } from '@/services/api';
 import { connectSocket } from '@/services/socket';
@@ -7,6 +7,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function ChatPage({ params }) {
+  // Next.js 15+: params is a Promise — unwrap with React.use()
+  const { id } = use(params);
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [chatId, setChatId] = useState(null);
@@ -16,7 +19,8 @@ export default function ChatPage({ params }) {
   const router = useRouter();
 
   useEffect(() => {
-    chatApi.get(params.id).then(({ data }) => {
+    if (!id) return;
+    chatApi.get(id).then(({ data }) => {
       setMessages(data.chat.messages);
       setChatId(data.chat.id);
 
@@ -25,7 +29,7 @@ export default function ChatPage({ params }) {
       socket.on('new-message', (msg) => setMessages((prev) => [...prev, msg]));
       return () => { socket.off('new-message'); socket.emit('leave-chat', data.chat.id); };
     });
-  }, [params.id]);
+  }, [id]);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
@@ -33,7 +37,7 @@ export default function ChatPage({ params }) {
     if (!input.trim() || sending) return;
     setSending(true);
     try {
-      await chatApi.send(params.id, input.trim());
+      await chatApi.send(id, input.trim());
       setInput('');
     } finally { setSending(false); }
   };
