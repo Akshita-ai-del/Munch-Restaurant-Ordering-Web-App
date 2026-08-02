@@ -1,3 +1,4 @@
+
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
@@ -18,7 +19,10 @@ export async function POST(request) {
     const { passwordHash, ...safeUser } = user;
     return Response.json({ token, user: safeUser });
   } catch (err) {
-    console.error(err);
-    return Response.json({ error: 'Login failed' }, { status: 500 });
+    console.error('[login]', err);
+    return Response.json(
+      { error: err?.message || 'Login failed. Please try again.' },
+      { status: 500 }
+    );
   }
 }

@@ -1,3 +1,6 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "rootDirectory": "frontend",
+  "buildCommand": "prisma generate && next build",
+  "installCommand": "npm install"
 }

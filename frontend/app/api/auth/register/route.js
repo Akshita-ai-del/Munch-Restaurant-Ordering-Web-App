@@ -10,18 +10,22 @@ export async function POST(request) {
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing)
-      return Response.json({ error: 'Email already registered' }, { status: 409 });
+      return Response.json({ error: 'Email already registered. Please sign in instead.' }, { status: 409 });
 
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, name, phone, passwordHash, wallet: { create: { balance: 0 } } },
+      data: { email, name, phone: phone || null, passwordHash, wallet: { create: { balance: 0 } } },
       select: { id: true, email: true, name: true, phone: true, role: true, avatarUrl: true },
     });
 
     const token = signToken(user.id);
     return Response.json({ token, user }, { status: 201 });
   } catch (err) {
-    console.error(err);
-    return Response.json({ error: 'Registration failed' }, { status: 500 });
+    console.error('[register]', err);
+    return Response.json(
+      { error: err?.message || 'Registration failed. Please try again.' },
+      { status: 500 }
+    );
   }
 }
+
