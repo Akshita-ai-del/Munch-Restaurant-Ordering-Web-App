@@ -1,16 +1,20 @@
 # Munch — Restaurant Ordering PWA
 
-A Progressive Web App (PWA) for The Yard Milkshake Bar, built with Next.js 14 frontend + Node.js/Express backend.
+A Progressive Web App (PWA) for The Yard Milkshake Bar, built with Next.js frontend + Node.js/Express backend.
+
+## 🌐 Live Demo
+
+**[https://munch-restaurant-ordering-web-app.vercel.app](https://munch-restaurant-ordering-web-app.vercel.app)**
 
 ## Project Structure
 
 ```
 web app/
-├── frontend/   ← Next.js 14 App Router PWA
+├── frontend/   ← Next.js App Router PWA
 └── backend/    ← Node.js + Express + Prisma + Socket.io
 ```
 
-## 🚀 Quick Start
+## 🚀 Local Development
 
 ### 1. Start the Backend
 ```bash
@@ -27,8 +31,6 @@ npm install
 npm run dev           # starts on http://localhost:3000
 ```
 
-Open **http://localhost:3000** in your browser.
-
 ## 🔑 Demo Login
 
 | Email                | Password    | Role     |
@@ -41,7 +43,7 @@ Open **http://localhost:3000** in your browser.
 ## 🎟 Promo Codes
 
 | Code     | Discount  | Min Order |
-|----------|-----------|-----------|
+|----------|-----------|-----------| 
 | MUNCH10  | 10% off   | $15       |
 | YARD5    | $5 off    | $20       |
 
@@ -58,8 +60,8 @@ Open **http://localhost:3000** in your browser.
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), Vanilla CSS, next-pwa
-- **Backend**: Node.js, Express, Socket.io, Prisma (SQLite→PostgreSQL)
+- **Frontend**: Next.js 15+ (App Router), Vanilla CSS, next-pwa
+- **Backend**: Node.js, Express, Socket.io, Prisma (PostgreSQL)
 - **Real-time**: Socket.io (order tracking, chat)
 - **Auth**: JWT (email/password)
 - **Payments**: Stripe test mode + Cash on Delivery
