@@ -93,19 +93,40 @@ export default function HomePage() {
 
         {!search && (
           <>
-            {/* Hero banner */}
+            {/* Hero banner — always shows the top featured item, stays evergreen */}
             <div className="section">
-              <div className="featured-banner" style={{ marginBottom: 0 }}>
-                <img src="https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=800&q=80" alt="Featured milkshake" />
-                <div className="featured-banner-content">
-                  <span className="tag-popular" style={{ alignSelf: 'flex-start', marginBottom: 'var(--space-2)' }}>✨ July Special</span>
-                  <h2 style={{ fontSize: 'var(--fs-2xl)', fontWeight: 900, marginBottom: 4 }}>Firework Shake</h2>
-                  <p style={{ fontSize: 'var(--fs-sm)', opacity: 0.85, marginBottom: 'var(--space-3)' }}>Red, white & blue. Limited time! 🎆</p>
-                  <Link href="/menu/july-fourth-firework-shake" className="btn btn-primary btn-sm" style={{ alignSelf: 'flex-start' }}>
-                    Order Now →
-                  </Link>
+              {featured.length > 0 ? (
+                <Link href={`/menu/${featured[0].id}`} style={{ textDecoration: 'none' }}>
+                  <div className="featured-banner" style={{ marginBottom: 0 }}>
+                    {featured[0].imageUrl
+                      ? <img src={featured[0].imageUrl} alt={featured[0].name} />
+                      : <img src="https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=800&q=80" alt="Featured shake" />}
+                    <div className="featured-banner-content">
+                      <span className="tag-popular" style={{ alignSelf: 'flex-start', marginBottom: 'var(--space-2)' }}>✨ House Special</span>
+                      <h2 style={{ fontSize: 'var(--fs-2xl)', fontWeight: 900, marginBottom: 4 }}>{featured[0].name}</h2>
+                      <p style={{ fontSize: 'var(--fs-sm)', opacity: 0.85, marginBottom: 'var(--space-3)' }}>
+                        {featured[0].description?.slice(0, 60) || 'Our most-loved creation — made fresh daily.'}
+                        {featured[0].description?.length > 60 ? '…' : ''}
+                      </p>
+                      <span className="btn btn-primary btn-sm" style={{ alignSelf: 'flex-start' }}>
+                        Order Now →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <div className="featured-banner" style={{ marginBottom: 0 }}>
+                  <img src="https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=800&q=80" alt="Munch shakes" />
+                  <div className="featured-banner-content">
+                    <span className="tag-popular" style={{ alignSelf: 'flex-start', marginBottom: 'var(--space-2)' }}>✨ Staff Pick</span>
+                    <h2 style={{ fontSize: 'var(--fs-2xl)', fontWeight: 900, marginBottom: 4 }}>Crafted with Love</h2>
+                    <p style={{ fontSize: 'var(--fs-sm)', opacity: 0.85, marginBottom: 'var(--space-3)' }}>Fresh ingredients, bold flavours, every day.</p>
+                    <Link href="/menu" className="btn btn-primary btn-sm" style={{ alignSelf: 'flex-start' }}>
+                      Browse Menu →
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Promo strip */}

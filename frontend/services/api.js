@@ -19,11 +19,15 @@ api.interceptors.request.use((config) => {
 });
 
 // Global error handling
+// NOTE: Do NOT auto-redirect on /auth/me 401 — AuthContext handles that itself.
+// Auto-redirect only for authenticated API calls that return 401 (expired / invalid token).
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      if (typeof window !== 'undefined') {
+      const url = err.config?.url || '';
+      const isAuthCheck = url.includes('/auth/me');
+      if (!isAuthCheck && typeof window !== 'undefined') {
         localStorage.removeItem('munch_token');
         window.location.replace('/login');
       }
